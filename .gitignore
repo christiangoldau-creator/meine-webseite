@@ -1,0 +1,18 @@
+# Secrets and credentials — niemals committen!
+*key*
+*secret*
+*token*
+*.pem
+*.env
+.env*
+credentials*
+
+# OS-Krempel
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
