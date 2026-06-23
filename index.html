@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Katzenrassen — Die schönsten Rassen im Überblick</title>
+<meta name="description" content="Die beliebtesten Katzenrassen auf einen Blick — Charakter, Pflege und Besonderheiten. Jetzt unseren kostenlosen Rasse-Guide sichern." />
+<style>
+  :root {
+    --bg: #fdfaf5;
+    --surface: #ffffff;
+    --text: #1f2233;
+    --text-muted: #5b6175;
+    --accent: #ff7a59;
+    --accent-dark: #e85a36;
+    --border: #ece6dc;
+    --shadow: 0 10px 30px rgba(20, 20, 40, 0.08);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent-dark); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header */
+  header.site {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  header.site .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  nav a {
+    margin-left: 20px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  nav a:hover { color: var(--text); text-decoration: none; }
+
+  /* Hero */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.15;
+    margin: 0 0 18px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero p.lead {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 640px;
+    margin: 0 auto 32px;
+  }
+  .hero .cta {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .hero .cta:hover {
+    background: var(--accent-dark);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  /* Section */
+  section {
+    padding: 60px 0;
+  }
+  section h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  section .section-intro {
+    color: var(--text-muted);
+    margin: 0 auto 40px;
+    max-width: 620px;
+    text-align: center;
+  }
+  section .section-head {
+    text-align: center;
+  }
+
+  /* Breed grid */
+  .breeds {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .breed-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .breed-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+  }
+  .breed-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    background: var(--bg);
+  }
+  .breed-body {
+    padding: 24px 28px 28px;
+  }
+  .breed-emoji {
+    font-size: 2.4rem;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .breed-emoji-only {
+    padding: 28px 28px 0;
+  }
+  .breed-card h3 {
+    margin: 0 0 6px;
+    font-size: 1.25rem;
+  }
+  .breed-origin {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .breed-card p.desc {
+    margin: 0 0 16px;
+    color: var(--text);
+  }
+  .breed-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .trait {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  /* Lead form */
+  .lead {
+    background: linear-gradient(135deg, #fff4ee 0%, #ffe9dc 100%);
+    border-radius: var(--radius);
+    padding: 56px 32px;
+    text-align: center;
+  }
+  .lead h2 { margin-top: 0; }
+  .lead form {
+    display: grid;
+    gap: 12px;
+    max-width: 460px;
+    margin: 28px auto 0;
+  }
+  @media (min-width: 600px) {
+    .lead form {
+      grid-template-columns: 1fr 1fr auto;
+      max-width: 720px;
+    }
+  }
+  .lead input {
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: white;
+    color: var(--text);
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .lead input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(255, 122, 89, 0.15);
+  }
+  .lead button {
+    padding: 14px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+    font-family: inherit;
+  }
+  .lead button:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+  .lead button:disabled {
+    background: #c9c4bb;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .lead .note {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 14px;
+  }
+  .lead .status {
+    margin-top: 16px;
+    font-weight: 600;
+    min-height: 1.4em;
+  }
+  .lead .status.ok { color: #2a7a3b; }
+  .lead .status.err { color: #b53a2a; }
+
+  /* Footer */
+  footer.site {
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    padding: 28px 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <div class="logo">Katzen<span>welt</span></div>
+    <nav>
+      <a href="#rassen">Rassen</a>
+      <a href="#guide">Guide</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <h1>Die Welt der <span class="accent">Katzenrassen</span> entdecken</h1>
+      <p class="lead">Von der majestätischen Maine Coon bis zur eleganten Siamkatze — finde die Rasse, die zu deinem Leben passt. Charakter, Pflege, Besonderheiten auf einen Blick.</p>
+      <a href="#guide" class="cta">Kostenlosen Rasse-Guide sichern</a>
+    </div>
+  </section>
+
+  <section id="rassen">
+    <div class="container">
+      <div class="section-head">
+        <h2>Beliebte Katzenrassen</h2>
+        <p class="section-intro">Eine kuratierte Auswahl der bekanntesten Rassen — mit allem Wichtigen, das du vor der Entscheidung wissen solltest.</p>
+      </div>
+
+      <div class="breeds">
+        <article class="breed-card">
+          <img class="breed-image" src="images/maine-coon.jpg" alt="Maine Coon Katze sitzt auf einer hellen Decke" loading="lazy" />
+          <div class="breed-body">
+            <h3>Maine Coon</h3>
+            <p class="breed-origin">USA</p>
+            <p class="desc">Die sanften Riesen unter den Katzen. Verspielt, gesellig und überraschend zutraulich — perfekt für Familien.</p>
+            <div class="breed-traits">
+              <span class="trait">Groß</span>
+              <span class="trait">Verschmust</span>
+              <span class="trait">Aktiv</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="breed-card">
+          <div class="breed-emoji breed-emoji-only">🐈</div>
+          <div class="breed-body">
+            <h3>Britisch Kurzhaar</h3>
+            <p class="breed-origin">Großbritannien</p>
+            <p class="desc">Ruhig, gelassen und mit ihrem plüschigen Fell die Quintessenz der entspannten Wohnungskatze.</p>
+            <div class="breed-traits">
+              <span class="trait">Ruhig</span>
+              <span class="trait">Anhänglich</span>
+              <span class="trait">Pflegeleicht</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="breed-card">
+          <div class="breed-emoji breed-emoji-only">🐱</div>
+          <div class="breed-body">
+            <h3>Siamkatze</h3>
+            <p class="breed-origin">Thailand</p>
+            <p class="desc">Schlank, elegant und ausgesprochen redselig. Siamkatzen bauen enge Bindungen zu ihrem Menschen auf.</p>
+            <div class="breed-traits">
+              <span class="trait">Sozial</span>
+              <span class="trait">Gesprächig</span>
+              <span class="trait">Intelligent</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="breed-card">
+          <div class="breed-emoji breed-emoji-only">😼</div>
+          <div class="breed-body">
+            <h3>Perserkatze</h3>
+            <p class="breed-origin">Iran</p>
+            <p class="desc">Mit ihrem langen Fell und dem ruhigen Wesen die Diva unter den Katzenrassen — Pflege gehört zum Alltag.</p>
+            <div class="breed-traits">
+              <span class="trait">Langhaar</span>
+              <span class="trait">Ruhig</span>
+              <span class="trait">Pflegeintensiv</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="breed-card">
+          <div class="breed-emoji breed-emoji-only">😺</div>
+          <div class="breed-body">
+            <h3>Bengalkatze</h3>
+            <p class="breed-origin">USA</p>
+            <p class="desc">Wildes Aussehen, sportliches Wesen. Die Bengal liebt Action, Kletterwände und Aufgaben für den Kopf.</p>
+            <div class="breed-traits">
+              <span class="trait">Energiegeladen</span>
+              <span class="trait">Verspielt</span>
+              <span class="trait">Klug</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="breed-card">
+          <div class="breed-emoji breed-emoji-only">🐾</div>
+          <div class="breed-body">
+            <h3>Ragdoll</h3>
+            <p class="breed-origin">USA</p>
+            <p class="desc">Die Schmusekatze schlechthin — entspannt, gutmütig und bekannt dafür, sich auf den Arm legen zu lassen wie eine Stoffpuppe.</p>
+            <div class="breed-traits">
+              <span class="trait">Sanft</span>
+              <span class="trait">Verschmust</span>
+              <span class="trait">Geduldig</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="guide">
+    <div class="container">
+      <div class="lead">
+        <h2>Hol dir den kostenlosen Rasse-Guide</h2>
+        <p>30 Seiten mit Steckbriefen, Pflegetipps und einem Mini-Test: Welche Rasse passt zu dir? Direkt in dein Postfach.</p>
+
+        <form id="lead-form" novalidate>
+          <input type="text" id="vorname" name="vorname" placeholder="Vorname" autocomplete="given-name" required />
+          <input type="email" id="email" name="email" placeholder="E-Mail-Adresse" autocomplete="email" required />
+          <button type="submit" id="submit-btn">Guide sichern</button>
+        </form>
+
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+        <p class="note">Wir versenden nur den Guide und gelegentliche Tipps. Abmeldung jederzeit möglich.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="container">
+    &copy; 2026 Katzenwelt &middot; <a href="#">Impressum</a> &middot; <a href="#">Datenschutz</a>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const form = document.getElementById('lead-form');
+    const status = document.getElementById('status');
+    const btn = document.getElementById('submit-btn');
+
+    function setStatus(message, kind) {
+      status.textContent = message;
+      status.classList.remove('ok', 'err');
+      if (kind) status.classList.add(kind);
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const vorname = form.vorname.value.trim();
+      const email = form.email.value.trim();
+
+      if (!vorname) { setStatus('Bitte gib deinen Vornamen ein.', 'err'); return; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setStatus('Bitte gib eine gültige E-Mail-Adresse ein.', 'err');
+        return;
+      }
+
+      btn.disabled = true;
+      setStatus('Wird gesendet ...', '');
+
+      try {
+        const res = await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ vorname: vorname, email: email })
+        });
+
+        if (!res.ok) throw new Error('Server antwortete mit Status ' + res.status);
+
+        setStatus('Danke, ' + vorname + '! Der Guide ist unterwegs zu dir.', 'ok');
+        form.reset();
+      } catch (err) {
+        setStatus('Hoppla, das hat nicht geklappt. Bitte versuche es gleich noch einmal.', 'err');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
