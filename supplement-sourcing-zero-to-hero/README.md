@@ -29,7 +29,9 @@ Die Kongresse (~90) besitzen eine warme, kaufstarke Audience – aber für viele
 | [`06-hersteller-eu.md`](06-hersteller-eu.md) | EU-Lohnhersteller-Shortlist je Format + Format-/Margen-Ökonomie (Kapsel vs. Pulver vs. Tee vs. Öl vs. Tinktur) |
 | [`07-produzierbarkeit-goldene-milch-churna.md`](07-produzierbarkeit-goldene-milch-churna.md) | Produzierbarkeit des Hero-Produkts: gesperrte Spezifikation, Rohstoff-BOM, Grenzwerte/CoA, passende Fabriken |
 | [`08-rfq-anfrage-goldene-milch-churna.md`](08-rfq-anfrage-goldene-milch-churna.md) | Versandfertige Hersteller-Anfrage (RFQ) inkl. Spezifikations- & Grenzwertblatt |
+| [`09-simulation-goldene-milch-churna.md`](09-simulation-goldene-milch-churna.md) | **Komplettsimulation** aller 9 Schritte mit konstruierten Beispielen (Fabrikliste, Anschreiben, simulierte Angebote + Vergleich, Bemusterung, Etikett, Launch) |
 | [`cockpit.html`](cockpit.html) | Visuelles Sandbox-Cockpit (Pipeline-Status, Konzepte, Risiken) — auch als [Artifact](https://claude.ai/code/artifact/037b5454-1e8a-4049-95c3-e97bfb69322b) |
+| [`simulation.html`](simulation.html) | **Visuelle Begehung** der Komplettsimulation für Mitgesellschafter:innen — auch als [Artifact](https://claude.ai/code/artifact/f0401ea4-ba07-499d-bccc-a55b71c70137) |
 
 ## Die Pipeline in einem Satz
 

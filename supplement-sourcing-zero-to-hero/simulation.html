@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Komplettsimulation — Goldene-Milch-Churna</title>
+</head>
+<body>
+<style>
+  :root{
+    --ground:#EEF0E8; --panel:#FFFFFF; --line:#E0DED3; --line-strong:#CFCDBF;
+    --ink:#1B241B; --mut:#6C7167; --faint:#9aa093;
+    --green:#34503F; --green-soft:#5C7A66; --green-tint:#E7EDE6;
+    --turmeric:#C5860F; --gold-tint:#F6EDD6;
+    --go:#2F7A55; --go-tint:#E4F0E8;
+    --caution:#B5811A; --caution-tint:#F6ECD6;
+    --kill:#A93B3B; --kill-tint:#F4E1DF;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0}
+  .wrap{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px)}
+  .shell{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--turmeric);font-weight:600}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(28px,5vw,46px);line-height:1.04;margin:.25em 0 .12em;text-wrap:balance;letter-spacing:-.01em}
+  .sub{color:var(--mut);font-size:15.5px;max-width:64ch}
+
+  .simbanner{display:flex;gap:10px;align-items:flex-start;background:var(--caution-tint);border:1px solid #e6d3a6;border-radius:12px;padding:11px 15px;font-size:13px;color:#5e4d1c}
+  .simbanner b{color:#3f340f}
+
+  /* sticky nav */
+  .nav{position:sticky;top:0;z-index:5;background:rgba(238,240,232,.92);backdrop-filter:blur(6px);padding:10px 0;margin:0 -4px;display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--line)}
+  .nav a{flex:0 0 auto;text-decoration:none;font-family:var(--mono);font-size:11px;color:var(--mut);border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 11px;transition:.15s}
+  .nav a:hover{border-color:var(--green-soft);color:var(--green)}
+
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,2.6vw,30px);scroll-margin-top:64px}
+  .step-h{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:4px}
+  .num{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--turmeric);line-height:1;font-variant-numeric:tabular-nums}
+  .step-h h2{font-family:var(--serif);font-size:clamp(20px,2.6vw,26px);font-weight:600;margin:0;flex:1;min-width:200px}
+  .gate{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:999px}
+  .g-go{background:var(--go-tint);color:var(--go)} .g-cau{background:var(--caution-tint);color:var(--caution)} .g-info{background:var(--green-tint);color:var(--green)}
+  .deliv{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin:2px 0 14px}
+  .step p{font-size:14.5px;margin:0 0 12px;color:#333b31}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0 4px}
+  .tbl-scroll{overflow-x:auto}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line)}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  td{vertical-align:top}
+  .num-c{font-variant-numeric:tabular-nums;font-family:var(--mono)}
+  .win{background:var(--go-tint)}
+  .win td{font-weight:600}
+  .flag{color:var(--kill);font-weight:600}
+
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:14px}
+  .kv dt{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);align-self:center}
+  .kv dd{margin:0;font-weight:500}
+
+  .ribbon{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+  .pill{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--ground)}
+  .pill.ok{background:var(--go-tint);border-color:#cfe0d4;color:var(--go)}
+  .pill.warn{background:var(--caution-tint);border-color:#e6d3a6;color:var(--caution)}
+
+  .mail{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:8px 0}
+  .mail .mh{background:var(--green-tint);padding:9px 14px;font-size:12.5px;border-bottom:1px solid var(--line)}
+  .mail .mh b{color:var(--green)}
+  .mail .mb{padding:13px 16px;font-size:13.5px;color:#3a4338;font-style:italic;background:#fff}
+
+  .ue{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+  .ue .card{background:var(--ground);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .ue .n{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--green);font-variant-numeric:tabular-nums}
+  .ue .l{font-size:12px;color:var(--mut);margin-top:3px}
+  @media(max-width:680px){.ue{grid-template-columns:1fr 1fr}}
+
+  /* label mock */
+  .label{max-width:380px;margin:8px auto;border:2px solid var(--green);border-radius:14px;padding:20px 22px;background:linear-gradient(180deg,#fffdf6,#fbf6e9);box-shadow:0 6px 22px rgba(52,80,63,.08)}
+  .label .brand{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--turmeric);text-align:center}
+  .label .pn{font-family:var(--serif);font-size:23px;font-weight:600;text-align:center;margin:6px 0 2px;color:var(--green)}
+  .label .desc{text-align:center;font-size:12.5px;color:var(--mut);margin-bottom:12px}
+  .label .net{text-align:center;font-family:var(--mono);font-size:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px 0;margin-bottom:10px}
+  .label .blk{font-size:11px;color:#4a4d44;margin:7px 0;line-height:1.5}
+  .label .blk b{color:var(--ink)}
+  .nochip{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--kill);background:var(--kill-tint);border-radius:6px;padding:2px 7px;margin:2px 4px 2px 0}
+
+  .summary table td:first-child{font-weight:600}
+  .foot{color:var(--faint);font-size:11.5px;text-align:center;line-height:1.6;max-width:80ch;margin:8px auto 0}
+  .foot b{color:var(--mut)}
+  @media (prefers-reduced-motion:no-preference){.step{transition:box-shadow .2s} .step:target{box-shadow:0 0 0 2px var(--turmeric)}}
+</style>
+
+<div class="wrap">
+  <div class="shell">
+
+    <header>
+      <div class="eyebrow">Komplettsimulation · für Mitgesellschafter &amp; Abteilung</div>
+      <h1>Von der Kongress-Idee zum Regal</h1>
+      <p class="sub">Die Sourcing-Pipeline einmal komplett durchgespielt — am Hero-Produkt <b>Goldene-Milch-Churna</b>. Neun Schritte, jeder mit seinem konkreten Arbeitsergebnis: Fabrikliste, Anschreiben, Angebote, Vergleich, Bemusterung, Etikett, Launch.</p>
+    </header>
+
+    <div class="simbanner">
+      <span>⚠️</span>
+      <div><b>Simulationshinweis:</b> Fabrik-Antworten, Preise, CoA-Werte und Verkaufszahlen (Schritte 6–9) sind konstruierte, realistische Beispiele zur Demonstration des Ablaufs — keine echten Angebote. Fiktive Hersteller sind als „A/B/C" anonymisiert; die reale Shortlist liegt im Projektordner.</div>
+    </div>
+
+    <nav class="nav" aria-label="Schritte">
+      <a href="#s1">1 Idee</a><a href="#s2">2 Business Case</a><a href="#s3">3 Regulatorik</a>
+      <a href="#s4">4 Rezeptur</a><a href="#s5">5 RFQ</a><a href="#s6">6 Angebote</a>
+      <a href="#s7">7 Bemusterung</a><a href="#s8">8 Etikett</a><a href="#s9">9 Launch</a>
+    </nav>
+
+    <section class="step" id="s1">
+      <div class="step-h"><span class="num">1</span><h2>Opportunity &amp; Idee</h2><span class="gate g-go">G1 · GO</span></div>
+      <div class="deliv">Deliverable — Opportunity-Brief</div>
+      <p>Aus der Opportunity-Matrix abgeleitet: ein aromatisiertes Premium-Bio-Churna schließt die größte Format-Lücke (kein Ayurveda-Pulver im Sortiment) und dockt an den Veda360-Darm-Kongress an.</p>
+      <dl class="kv">
+        <dt>Quelle</dt><dd>Opportunity-Matrix #8 (Score 3,96) + Format-Lücke</dd>
+        <dt>Audience</dt><dd>Frauen 45–65 · Darm/Pflanzenmedizin · „authentisch ayurvedisch"</dd>
+        <dt>Kanal</dt><dd>Kongress → ActiveCampaign → Viktilabs-Shop</dd>
+        <dt>Marge grob</dt><dd>VK 16,90 € / COGS ~3 € → ~75 %</dd>
+      </dl>
+    </section>
+
+    <section class="step" id="s2">
+      <div class="step-h"><span class="num">2</span><h2>Business Case</h2><span class="gate g-go">G2 · GO</span></div>
+      <div class="deliv">Deliverable — Deckungsbeitrag &amp; Break-even</div>
+      <div class="ue">
+        <div class="card"><div class="n">9,82 €</div><div class="l">DB1 / Dose (≈ 62 %)</div></div>
+        <div class="card"><div class="n">1.240</div><div class="l">Break-even (41 % der 3.000er-Charge)</div></div>
+        <div class="card"><div class="n">~12,2 k€</div><div class="l">Setup + Erstcharge</div></div>
+      </div>
+      <p style="margin-top:14px">VK netto 15,79 € − COGS 3,40 € − Fulfillment 2,10 € − Gebühren 0,47 € = <b>DB1 9,82 €</b>. Break-even unter der 50 %-Schwelle → Geschäft trägt sich bereits in der Erstcharge.</p>
+    </section>
+
+    <section class="step" id="s3">
+      <div class="step-h"><span class="num">3</span><h2>Regulatorik-Vorprüfung</h2><span class="gate g-go">G3 · GO mit Auflagen</span></div>
+      <div class="deliv">Deliverable — Ampel + Auflagen</div>
+      <div class="ribbon">
+        <span class="pill ok">Novel Food: Vollfrucht ✓</span>
+        <span class="pill ok">Curcumin-ADI: ~22 mg ≪ 210 mg</span>
+        <span class="pill ok">claim-frei vermarkten</span>
+        <span class="pill warn">Auflage: Chargen-CoA Pflicht</span>
+        <span class="pill ok">Ceylon-Zimt statt Cassia</span>
+      </div>
+      <p style="margin-top:12px">Der kritische Befund — der Curcumin-Grenzwert — wird durch Design gelöst: Kurkuma nur als Pulver (≤ 15 %), kein Extrakt. So bleibt die Tagesdosis weit unter dem ADI.</p>
+    </section>
+
+    <section class="step" id="s4">
+      <div class="step-h"><span class="num">4</span><h2>Rezeptur &amp; Rohstoffspezifikation</h2><span class="gate g-info">gesperrt</span></div>
+      <div class="deliv">Deliverable — Bill of Materials + Grenzwerte</div>
+      <div class="ribbon">
+        <span class="pill">Triphala 35 %</span><span class="pill">Amla 14 %</span><span class="pill">Kurkuma ≤15 %</span>
+        <span class="pill">Ingwer 10 %</span><span class="pill">Ceylon-Zimt 10 %</span><span class="pill">Kardamom 5 %</span>
+        <span class="pill">Kokosblütenzucker 10 %</span><span class="pill">Pfeffer: Prise</span>
+      </div>
+      <p style="margin-top:12px"><b>Grenzwert-Spezifikation an Hersteller:</b> Pb ≤ 1,0 · Cd ≤ 1,0 · Hg ≤ 0,1 · As ≤ 1,0 mg/kg · Pestizide EU-MRL · Ethylenoxid n.n. · Aflatoxine B1 ≤ 2 µg/kg · Salmonella/E. coli n.n. — alles Bio, vegan, ohne Zusatzstoffe.</p>
+    </section>
+
+    <section class="step" id="s5">
+      <div class="step-h"><span class="num">5</span><h2>Fabrik-Auswahl &amp; Anschreiben</h2><span class="gate g-info">G4 · RFQ versendet</span></div>
+      <div class="deliv">Deliverable — Shortlist + versendete RFQ</div>
+      <div class="tbl-scroll"><table>
+        <tr><th>Hersteller</th><th>Land</th><th>MOQ</th><th>Stärke</th></tr>
+        <tr><td>Drexel Private Label</td><td>DE</td><td class="num-c">projektabh.</td><td>Bio-Pulver + Extrakte, saubere Doku</td></tr>
+        <tr><td>Naturtheke</td><td>DE</td><td class="num-c">ab 50</td><td>Kleinst-Testcharge möglich</td></tr>
+        <tr><td>VehGro</td><td>NL</td><td class="num-c">tw. kein</td><td>Bio-Rohstoffe + Lohnfüllung</td></tr>
+      </table></div>
+      <div class="mail">
+        <div class="mh"><b>An:</b> 3 Hersteller · <b>Betreff:</b> [RFQ-2026-0001] Anfrage Lohnherstellung Bio-Churna – Viktilabs</div>
+        <div class="mb">„… wir planen die Einführung einer aromatisierten Bio-Pulvermischung (Goldene-Milch-Churna), Vollfrucht/Gewürz, keine Extrakte, 150-g-Dose. Bitte um Angebot: MOQ &amp; Staffelpreise, Lieferzeit, Zertifizierungen, chargenspezifisches Schwermetall-CoA. Spezifikation im Anhang. …"</div>
+      </div>
+    </section>
+
+    <section class="step" id="s6">
+      <div class="step-h"><span class="num">6</span><h2>Angebote, Vergleich &amp; Rückfrage</h2><span class="gate g-go">G4 · GO → Hersteller A</span></div>
+      <div class="deliv">Deliverable — Scoring (simuliert) + Entscheidungsvorlage</div>
+      <p>Drei Angebote gehen ein. Claude extrahiert sie automatisch in vergleichbare Felder, prüft die Schwermetalle hart gegen den Grenzwert und erstellt das gewichtete Scoring.</p>
+      <div class="tbl-scroll"><table>
+        <tr><th>Kriterium (Gewicht)</th><th>A · DE Bio-Premium</th><th>B · DE Klein-MOQ</th><th>C · NL Preisführer</th></tr>
+        <tr><td>Preis/Dose @3.000 (35 %)</td><td class="num-c">3,40 €</td><td class="num-c">3,95 €</td><td class="num-c">2,80 €</td></tr>
+        <tr><td>Schwermetall-CoA (20 %)</td><td>✅ konform</td><td>✅ konform</td><td class="flag">❌ fehlt</td></tr>
+        <tr><td>Zertifikate (15 %)</td><td>GMP+IFS+Bio</td><td>ISO+HACCP+Bio</td><td>Bio i. Beantr.</td></tr>
+        <tr><td>Lieferzeit (12 %)</td><td class="num-c">9 Wo</td><td class="num-c">7 Wo</td><td class="num-c">8 Wo</td></tr>
+        <tr><td>MOQ (10 %)</td><td class="num-c">1.000</td><td class="num-c">500</td><td class="num-c">2.500</td></tr>
+        <tr class="win"><td>Gesamt-Score</td><td class="num-c">91,1</td><td class="num-c">84,6</td><td class="num-c flag">68,0</td></tr>
+      </table></div>
+      <div class="mail">
+        <div class="mh"><b>Auto-Rückfrage</b> (Workflow D, Entwurf) <b>an:</b> Hersteller C</div>
+        <div class="mb">„… für die abschließende Bewertung fehlt uns das chargenspezifische Schwermetall-CoA (Pb/Cd/Hg/As) sowie der Status Ihrer Bio-Zertifizierung. Bitte beides nachreichen. …"</div>
+      </div>
+      <p><b>Entscheidung (Mensch):</b> Hersteller A (höchster Score, vollständige CoA-Lage). B als Klein-Backup. C zurückgestellt bis CoA — der Preisführer scheitert am K.-o.-Kriterium.</p>
+    </section>
+
+    <section class="step" id="s7">
+      <div class="step-h"><span class="num">7</span><h2>Bemusterung &amp; Stabilität</h2><span class="gate g-go">G5 · GO</span></div>
+      <div class="deliv">Deliverable — Chargen-CoA (sim.) + Sensorik + MHD</div>
+      <div class="tbl-scroll"><table>
+        <tr><th>Parameter</th><th>Messwert (sim.)</th><th>Grenzwert</th><th>Status</th></tr>
+        <tr><td>Blei</td><td class="num-c">0,38 mg/kg</td><td class="num-c">≤ 1,0</td><td>✅</td></tr>
+        <tr><td>Cadmium</td><td class="num-c">0,29 mg/kg</td><td class="num-c">≤ 1,0</td><td>✅</td></tr>
+        <tr><td>Quecksilber</td><td class="num-c">0,02 mg/kg</td><td class="num-c">≤ 0,1</td><td>✅</td></tr>
+        <tr><td>Ethylenoxid</td><td class="num-c">n.n.</td><td class="num-c">n.n.</td><td>✅</td></tr>
+        <tr><td>Salmonella (25 g)</td><td class="num-c">n.n.</td><td class="num-c">n.n.</td><td>✅</td></tr>
+      </table></div>
+      <div class="ribbon" style="margin-top:10px">
+        <span class="pill ok">Sensorik-Panel 4,3 / 5 — Bitterkeit abgepuffert</span>
+        <span class="pill ok">MHD 24 Monate</span>
+        <span class="pill warn">→ Trockenmittel + Barriere ergänzt</span>
+      </div>
+    </section>
+
+    <section class="step" id="s8">
+      <div class="step-h"><span class="num">8</span><h2>Naming, Branding &amp; Etikett</h2><span class="gate g-go">G6 · GO</span></div>
+      <div class="deliv">Deliverable — konstruiertes, HCVO/LMIV-konformes Etikett</div>
+      <div class="label">
+        <div class="brand">Veda · by Viktilabs</div>
+        <div class="pn">Goldene-Milch-Churna</div>
+        <div class="desc">Ayurvedische Bio-Gewürz-Pulvermischung<br>mit Triphala, Amla &amp; Kurkuma</div>
+        <div class="net">Nettofüllmenge: 150 g</div>
+        <div class="blk"><b>Zutaten:</b> Triphala-Pulver* (Amalaki, Bibhitaki, Haritaki) 35 %, Amla* 14 %, Kurkuma* 15 %, Kokosblütenzucker* 11 %, Ingwer* 10 %, Ceylon-Zimt* 10 %, Kardamom* 5 %, schwarzer Pfeffer*. *Bio.</div>
+        <div class="blk"><b>Verzehr:</b> 1 TL (ca. 5 g) in warme (Pflanzen-)Milch. Tagesmenge nicht überschreiten.</div>
+        <div class="blk">Kühl &amp; trocken lagern · außerhalb der Reichweite von Kindern · kein Ersatz für eine ausgewogene Ernährung.</div>
+        <div class="blk">DE-ÖKO-XXX · Viktilabs GmbH · MHD/Los: siehe Deckel</div>
+      </div>
+      <p style="text-align:center;margin-top:14px">Bewusst <b>nicht</b> auf dem Etikett:
+        <span class="nochip">keine Heilaussage</span><span class="nochip">keine Wirkversprechen</span><span class="nochip">kein Krankheitsbezug</span>
+      </p>
+    </section>
+
+    <section class="step" id="s9">
+      <div class="step-h"><span class="num">9</span><h2>BVL-Anzeige, Launch &amp; Review</h2><span class="gate g-go">G7–G10 · GO → Scale</span></div>
+      <div class="deliv">Deliverable — Launch-Plan + KPIs (T+90, simuliert)</div>
+      <p><b>Funnel:</b> Veda360-Darm-Kongress (Experten-Slot) → 3-Mail-Sequenz (ActiveCampaign) → Shop. Bundle „Veda Darm-Ritual", Launch-Code <span class="pill">VEDACHURNA15</span>. § 5 NemV-Anzeige beim BVL erfolgt.</p>
+      <div class="ue">
+        <div class="card"><div class="n">62 %</div><div class="l">Sell-through T+90</div></div>
+        <div class="card"><div class="n">64 %</div><div class="l">DB1 (über Plan)</div></div>
+        <div class="card"><div class="n">&lt; 1 %</div><div class="l">Retourenquote</div></div>
+      </div>
+      <p style="margin-top:14px"><b>Review-Entscheidung G10: GO (Scale)</b> — Nachproduktion 5.000 Dosen (Stückkosten ↓ auf 3,05 €), Aufnahme ins Dauersortiment, „Frauenwohl-Churna" als nächster Kandidat auf derselben Pipeline.</p>
+    </section>
+
+    <section class="step summary">
+      <div class="step-h"><span class="num">∑</span><h2>Ergebnis</h2></div>
+      <div class="tbl-scroll"><table>
+        <tr><th>Kennzahl</th><th>Wert</th></tr>
+        <tr><td>Gesamtdauer (Fast-Track)</td><td>~10–12 Wochen</td></tr>
+        <tr><td>Investition Erstcharge</td><td>~12–15 k€</td></tr>
+        <tr><td>DB1</td><td>~62–64 %</td></tr>
+        <tr><td>Ausgang</td><td>verkaufsfertiges Hero-Produkt → Scale</td></tr>
+        <tr><td>Strategischer Gewinn</td><td>Pipeline als wiederholbare Fähigkeit validiert</td></tr>
+      </table></div>
+    </section>
+
+    <p class="foot">Komplettsimulation der Sourcing-Pipeline · Veda360 / Viktilabs · belegt durch 18-Agenten-Recherche. Schritte 6–9 enthalten konstruierte Beispielwerte zur Demonstration. <b>Kein Ersatz für lebensmittelrechtliche Beratung vor Produktentscheidungen.</b></p>
+  </div>
+</div>
+</body>
+</html>
