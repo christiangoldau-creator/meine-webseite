@@ -27,6 +27,9 @@ Die Kongresse (~90) besitzen eine warme, kaufstarke Audience – aber für viele
 | [`04-rfq-fabrik-automation.md`](04-rfq-fabrik-automation.md) | Automatisierte Verarbeitung von Fabrik-Angeboten (Gmail→n8n→Claude→Asana): Schema, Workflows, Scoring, Rückfragen |
 | [`05-regulatorik-und-compliance.md`](05-regulatorik-und-compliance.md) | Regulatorik-Ampel je Botanical, Novel Food, Schwermetalle, HCVO/HWG, NemV – Compliance-Checkliste |
 | [`06-hersteller-eu.md`](06-hersteller-eu.md) | EU-Lohnhersteller-Shortlist je Format + Format-/Margen-Ökonomie (Kapsel vs. Pulver vs. Tee vs. Öl vs. Tinktur) |
+| [`07-produzierbarkeit-goldene-milch-churna.md`](07-produzierbarkeit-goldene-milch-churna.md) | Produzierbarkeit des Hero-Produkts: gesperrte Spezifikation, Rohstoff-BOM, Grenzwerte/CoA, passende Fabriken |
+| [`08-rfq-anfrage-goldene-milch-churna.md`](08-rfq-anfrage-goldene-milch-churna.md) | Versandfertige Hersteller-Anfrage (RFQ) inkl. Spezifikations- & Grenzwertblatt |
+| [`cockpit.html`](cockpit.html) | Visuelles Sandbox-Cockpit (Pipeline-Status, Konzepte, Risiken) — auch als [Artifact](https://claude.ai/code/artifact/037b5454-1e8a-4049-95c3-e97bfb69322b) |
 
 ## Die Pipeline in einem Satz
 
