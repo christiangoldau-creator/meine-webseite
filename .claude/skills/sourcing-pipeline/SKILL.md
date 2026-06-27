@@ -44,10 +44,14 @@ plus präsentierbare Deliverables für Geschäftsführung und Abteilung.
 - Deliverable: `00-situationsanalyse.md` (Markenstruktur, Katalog-Lücke).
 
 ### Phase 1 — Repeated-Claims-Mining (interne Kongressinhalte)
-- Durchsuche die Kongress-Transkripte/Mastertabellen des Zielkongresses in Drive.
+- Quellen je Kongress: (1) Mastertabellen/Supplementboxen in Drive **und**
+  (2) **Vimeo-Volltext-Transkripte** der Vorträge (via `tools/vimeo_transcripts.py`
+  bzw. n8n-Workflow „Vimeo-Transkript-Sync", siehe `10-vimeo-transcript-integration.md`).
+  Vimeo-Token nur als Env-Var/n8n-Credential, nie im Chat.
 - Extrahiere **wiederholt** auftretende Experten-Empfehlungen (Wirkstoff ×
   Häufigkeit), Indikations-Prioritäten, genannte Formate, bestehende
-  Produktplatzierungen/Bundles. Belege mit Datei-Titel als Quelle.
+  Produktplatzierungen/Bundles. Belege mit **wörtlichem Zitat + Sprecher +
+  Quelle** (Datei-Titel bzw. Vimeo-Video-ID/Zeitbezug).
 
 ### Phase 2 — Recherche (Web + Markt)
 Pro Dimension belastbare, **mit Quell-URLs belegte** Befunde:
