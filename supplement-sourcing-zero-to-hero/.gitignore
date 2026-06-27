@@ -5,3 +5,7 @@
 *secret*
 transkripte/
 **/transkripte/
+
+# Python
+__pycache__/
+*.pyc
