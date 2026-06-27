@@ -26,7 +26,9 @@ Die Kongresse (~90) besitzen eine warme, kaufstarke Audience – aber für viele
 | [`03-sourcing-pipeline.md`](03-sourcing-pipeline.md) | Stage-Gate-Pipeline „von Null bis in den Shop": 10 Gates, parallele Tracks, Rollen, Timeline, Kosten + Architektur-Empfehlung |
 | [`04-rfq-fabrik-automation.md`](04-rfq-fabrik-automation.md) | Automatisierte Verarbeitung von Fabrik-Angeboten (Gmail→n8n→Claude→Asana): Schema, Workflows, Scoring, Rückfragen |
 | [`05-regulatorik-und-compliance.md`](05-regulatorik-und-compliance.md) | Regulatorik-Ampel je Botanical, Novel Food, Schwermetalle, HCVO/HWG, NemV – Compliance-Checkliste |
-| [`06-hersteller-eu.md`](06-hersteller-eu.md) | EU-Lohnhersteller-Shortlist je Format + Format-/Margen-Ökonomie (Kapsel vs. Pulver vs. Tee vs. Öl vs. Tinktur) |
+| [`06-hersteller-eu.md`](06-hersteller-eu.md) | EU-Lohnhersteller — kuratierte Master-Liste je Format + bestehender Stamm (aus Drive) + Format-/Margen-Ökonomie |
+| [`06b-hersteller-longlist-eu.md`](06b-hersteller-longlist-eu.md) | **Vollständige EU-Longlist** (100+ Hersteller in ~18 Ländern, länderweise) + Botanical-Rohstoff-/Extrakt-Häuser |
+| [`gemini-brief-lohnhersteller.md`](gemini-brief-lohnhersteller.md) | Reinkopier-fertiger Gemini-Deep-Research-Brief für eigene EU-Hersteller-Suchen |
 | [`07-produzierbarkeit-goldene-milch-churna.md`](07-produzierbarkeit-goldene-milch-churna.md) | Produzierbarkeit des Hero-Produkts: gesperrte Spezifikation, Rohstoff-BOM, Grenzwerte/CoA, passende Fabriken |
 | [`08-rfq-anfrage-goldene-milch-churna.md`](08-rfq-anfrage-goldene-milch-churna.md) | Versandfertige Hersteller-Anfrage (RFQ) inkl. Spezifikations- & Grenzwertblatt |
 | [`09-simulation-goldene-milch-churna.md`](09-simulation-goldene-milch-churna.md) | **Komplettsimulation** aller 9 Schritte mit konstruierten Beispielen (Fabrikliste, Anschreiben, simulierte Angebote + Vergleich, Bemusterung, Etikett, Launch) |
