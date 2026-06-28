@@ -1,0 +1,11 @@
+# Geheimnisse & abgeleitete Daten — niemals committen
+*.env
+.env
+*token*
+*secret*
+transkripte/
+**/transkripte/
+
+# Python
+__pycache__/
+*.pyc
