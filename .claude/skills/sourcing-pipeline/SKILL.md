@@ -1,132 +1,82 @@
 ---
 name: sourcing-pipeline
-description: >-
-  Spielt die Supplement-Sourcing-Pipeline „von der Kongress-Idee bis zum
-  verkaufsfertigen Produkt im Shop" für einen Medumio/Veda360-Kongress durch.
-  Nutze diese Skill, wenn der Nutzer aus einem Kongress/Thema neue Viktilabs-
-  Supplements ableiten, eine Produktinnovations-Analyse, Opportunity-Matrix,
-  Produktkonzepte, Produzierbarkeit (Fabriken/Rohstoffe/Grenzwerte), eine
-  Hersteller-Anfrage (RFQ) oder eine vollständige Pipeline-Simulation/
-  Visualisierung will. Auslöser u. a.: „Sourcing-Pipeline für <Kongress>",
-  „welche Supplemente sollen wir produzieren", „Produktideen aus dem Kongress",
-  „Hersteller-Anfrage erstellen", „Pipeline durchspielen/simulieren".
+description: >
+  Unternehmensfähigkeit „Sourcing-Pipeline" — von der Kongress-Erkenntnis bis zum Produkt im Shop, für
+  Viktilabs / Veda360 / Medumio. IMMER nutzen, wenn jemand aus Kongressinhalten neue Supplement-Produkte entwickeln will:
+  Vimeo-Kongress-Transkripte ziehen, Repeated-Claims-Mining, Produktideen/Konzepte bewerten,
+  Regulatorik-/Novel-Food-/HWG-Check, EU-Lohnhersteller & RFQ, Produzierbarkeit/Rezeptur/BOM, sowie
+  Produkt-Design (markentreue Mockups) und Produkt-Detailseiten (PDP) erstellen. Auch auslösen bei:
+  „Sourcing-Pipeline", „Claims-Mining aus Kongress", „welches Supplement sollen wir machen",
+  „Produktidee für Veda360/Wechseljahre", „RFQ an Hersteller", „Produkt-Mockup / Packaging / Doypack /
+  Kapselglas für Viktilabs", „Produktseite / USPs für ein neues Supplement". Greift auch ohne das Wort
+  „Pipeline", sobald es um Sortimentsentwicklung aus Kongressen für diese Marken geht.
 ---
 
-# Sourcing-Pipeline: Kongress → Produkt → Shop
+# Supplement Sourcing Pipeline (Zero to Hero)
 
-Du führst die Produkt-Sourcing-Pipeline für die Firmengruppe **Medumio**
-(Kongresse) / **Veda360** (ganzheitlich-ayurvedische Kongressmarke) /
-**Viktilabs** (Supplement-Eigenmarke, Shopify Plus, DE/EUR) durch.
+Strukturierte Fähigkeit, aus den Medumio/Veda360-**Kongressen** heraus neue **Viktilabs**-Supplements zu
+entwickeln — von der Kongress-Erkenntnis bis zum verkaufsfertigen Produkt im Shop. Architektur auf dem
+vorhandenen Stack: Asana (Single Source of Truth) · Google Drive · n8n · Claude API.
 
-**Eingabe:** ein Kongress oder Thema (z. B. „Wechseljahre", „Autoimmun",
-„Ayurveda/Veda360", „Skelett/Gelenke"). Optional ein Ziel-Hero-Produkt.
+## Wissensbasis (zuerst auf Claude-Server entwickelt, Daten auf GitHub)
 
-**Ziel:** belastbare, regulatorisch saubere, margenstarke Produktentscheidungen
-entlang des einzigartigen Vertriebswegs `Kongress → ActiveCampaign → Shop` —
-plus präsentierbare Deliverables für Geschäftsführung und Abteilung.
+Die Fähigkeit wurde ursprünglich auf dem Claude-Server entwickelt; die Daten/Dokumente liegen auf **GitHub**:
+`github.com/christiangoldau-creator/meine-webseite` → Ordner **`supplement-sourcing-zero-to-hero/`**
+(Branch `claude/supplement-sourcing-github-unk0l9`), lokal geklont unter
+`C:\Users\state\meine-webseite\supplement-sourcing-zero-to-hero\`.
+Vor inhaltlicher Arbeit das relevante Doc lesen — Übersicht & Mapping:
+[`references/pipeline-overview.md`](references/pipeline-overview.md). Neue Analysen/Outputs als nummeriertes
+Doc dort ablegen (gleicher Stil) und committen/pushen, Design-Assets nach `design/`.
 
-**Referenz-Implementierung:** der vollständige Ayurveda-Durchlauf liegt in
-`supplement-sourcing-zero-to-hero/` (Dokumente `00`–`09` + `cockpit.html` +
-`simulation.html`). Nutze ihn als Vorlage für Struktur, Tiefe und Tonalität.
+## Setup (pro Lauf prüfen)
 
----
+- **API-Keys** in `C:\Users\state\OneDrive\Dokumente\Claude\secrets\` (Vimeo, OpenAI, Gemini). Pro Bash-Lauf laden (Shell-State persistiert nicht), z. B. `export VIMEO_ACCESS_TOKEN="$(tr -d ' \r\n' < "<secrets>/vimeo key.txt")"`. Token/Keys **nie** in Chat/Repo.
+- **Python**: echter Interpreter `C:\Users\state\AppData\Local\Programs\Python\Python312\python.exe` (PATH-`python` ist nur Store-Platzhalter). Skripte sind reine stdlib.
 
-## Phasen (jede Phase = ein Deliverable + ein Gate)
+## Die Pipeline in einem Satz
 
-### Phase 0 — Kontext laden
-- **Unternehmenswissen + Kongress-Pipeline** (Google Drive): `search_files` /
-  `read_file_content` (z. B. `pipeline-architektur-skelett.md`, Mastertabellen,
-  Supplementboxen, Mailserien).
-- **Bestehender Katalog** (Shopify): `search_products` / `search_collections` —
-  gezielt nach den relevanten Wirkstoffen/Formaten suchen (nicht alles dumpen;
-  große Outputs werden in Dateien gespeichert → mit `jq`/Subagent verarbeiten).
-- **Markenstruktur & Vertriebsweg** festhalten (welcher Kongress, welche Audience).
-- Deliverable: `00-situationsanalyse.md` (Markenstruktur, Katalog-Lücke).
+```
+90 Kongresse → Repeated-Claims-Miner → Opportunity-Backlog
+  → G1 Idee → G2 Business Case → G3 REGULATORIK (Frühfilter)
+  → RFQ/Hersteller → Muster/Stabilität → Etikett/Compliance → BVL-Anzeige
+  → Produktion → PRODUKTDESIGN (Mockups + Produktseite) → Launch (Kongress→Mail→Shop)
+```
 
-### Phase 1 — Repeated-Claims-Mining (interne Kongressinhalte)
-- Quellen je Kongress: (1) Mastertabellen/Supplementboxen in Drive **und**
-  (2) **Vimeo-Volltext-Transkripte** der Vorträge (via `tools/vimeo_transcripts.py`
-  bzw. n8n-Workflow „Vimeo-Transkript-Sync", siehe `10-vimeo-transcript-integration.md`).
-  Vimeo-Token nur als Env-Var/n8n-Credential, nie im Chat.
-- Extrahiere **wiederholt** auftretende Experten-Empfehlungen (Wirkstoff ×
-  Häufigkeit), Indikations-Prioritäten, genannte Formate, bestehende
-  Produktplatzierungen/Bundles. Belege mit **wörtlichem Zitat + Sprecher +
-  Quelle** (Datei-Titel bzw. Vimeo-Video-ID/Zeitbezug).
+## Stufen
 
-### Phase 2 — Recherche (Web + Markt)
-Pro Dimension belastbare, **mit Quell-URLs belegte** Befunde:
-Markt (DACH/EU, CAGR, Audience-Fit) · Wettbewerb (Marken, Preise, Lücken) ·
-Evidenz-Ranking der Botanicals (Evidenz × Audience-Fit) · Amazon-/Buch-Signale
-(Nachfrage + Differenzierung) · **Regulatorik** (Novel Food, NemV/AM-Abgrenzung,
-Schwermetalle VO 2023/915, HCVO/HWG) · **EU-Lohnhersteller** je Format ·
-Format-/Margen-Ökonomie.
-- Lade dafür `WebSearch`/`WebFetch` via ToolSearch.
-- Bei „gründlich/umfassend/ultracode" oder explizitem Wunsch: **Workflow-Tool**
-  für parallele Fan-out-Recherche + adversariale Verifikation nutzen (siehe
-  Referenz-Run). Sonst sequenziell mit Subagenten.
-- Deliverable: `01-analyse-<kongress>.md` (konsolidierte Analyse + Opportunity-Matrix).
+1. **Transkripte ziehen** — Vimeo-Kongress-Ordner → bereinigter Klartext via `tools/vimeo_transcripts.py` im Repo (`--folder <id> --out ./transkripte`). Token = `VIMEO_ACCESS_TOKEN`.
+2. **Wirkstoff-Recherche & Claims-Mining** — über alle Transkripte fan-out (mehrere Agenten, je ein Batch): Substanz↔Indikation-Paare strukturiert extrahieren, Re-Upload-Dubletten herausrechnen, frequenzgerankter Opportunity-Backlog; ergänzt um vertiefte **Recherche zu den Wirkstoffen** (Markt, Evidenz, Wettbewerb, Amazon/Bücher, Web). Docs 01 + 11.
+3. **Produktideen & Bewertung** — Konzepte ableiten, adversarial prüfen (GO/CAUTION/KILL), Format-/Margen-Vergleich. Doc 02.
+4. **Regulatorik (G3-Frühfilter)** — Ampel je Botanical: Novel Food, AM-Abgrenzung (Dosis), Verbots-/Warnstoffe (z. B. **Ashwagandha = ROT**), Schwermetalle, HWG/HCVO. Doc 05. **Claim-unabhängige Grenzen gelten immer.**
+5. **Lohnhersteller (europaweit) & RFQ** — EU-weite Lohnhersteller-Recherche/Listen + versandfertige RFQ + RFQ-Automation (Gmail→n8n→Claude→Asana). Docs 04/06/08.
+6. **Produzierbarkeit** — gesperrte Spezifikation, Rohstoff-BOM, Grenzwerte/CoA. Docs 07/12.
+7. **Produktdesign — Produktdetailseite + Mock-Ups** — fester Teil der Produktionskette: am Ende braucht jedes Produkt eine PDP, und darauf gehören die Mock-Ups. Siehe unten. Outputs nach `design/`.
+8. **Launch** — Funnel Kongress → E-Mail → Shop.
 
-### Phase 3 — Opportunity-Matrix
-Bewerte {Botanical/Wirkstoff} × {Format} × {Indikation} gewichtet:
-Nachfrage/Fit 25 % · Vertriebsweg 20 % · Regulatorik 20 % · Marge 15 % ·
-Wettbewerbslücke 12 % · Evidenz 8 %. Ranke die Top-10. Hebe hervor, was
-bestehende Hero-SKUs **ergänzt statt kannibalisiert** (neue Botanicals/Formate).
+## Stufe 7 — Produktdesign
 
-### Phase 4 — Konzepte + adversariale Prüfung
-- Entwickle 5–6 konkrete Konzepte (Mix der Formate, Kombi-/Bundle-Logik),
-  je mit Wirkstoffen/Dosis, Positionierung, COGS/VK/Marge, Wettbewerb,
-  Regulatorik-Risiko, Vertriebsweg, Kongress-Anker.
-- **Prüfe jedes Konzept adversarial** (Regulatory + Commercial, skeptisch):
-  Novel Food, Verbots-/AM-Risiko, Schwermetalle, Claim-Falle, Marktsättigung,
-  Kannibalisierung → Verdikt **GO / CAUTION / KILL** mit Begründung.
-- Deliverable: `02-produktideen.md`.
+Zwei Teilaufgaben; Detail-Anleitungen:
+- **Mockups**: [`references/brand-system.md`](references/brand-system.md) — echtes Viktilabs-Label-System, Verpackungsregeln, Prompt-Baukasten, erprobte Beispiele.
+- **Produktseiten (PDP)**: [`references/product-page-template.md`](references/product-page-template.md) — Shop-Aufbau, Copy-Module, Claim-Regel, Artifact-Rendering.
 
-### Phase 5 — Hero-Produkt & Produzierbarkeit
-- Hero-Produkt festlegen (Empfehlung begründen; bei echtem Entscheidungsbedarf
-  `AskUserQuestion`, sonst empfohlene Wahl treffen und weiterarbeiten).
-- Gesperrte Spezifikation + Rohstoff-BOM + **Grenzwert-/CoA-Anforderungen**
-  (Pb/Cd/Hg/As, Pestizide, EtO, Mykotoxine, Mikrobiologie) + passende Fabriken.
-- Deliverables: `03-sourcing-pipeline.md`, `05-regulatorik-und-compliance.md`,
-  `06-hersteller-eu.md`, `07-produzierbarkeit-<produkt>.md`.
+### Mockups — Kern
+- **Form zuerst klären → Verpackung folgt zwingend:** Pulver/Churna = **Doypack**; Kapseln/Presslinge = **Braunglas + schwarzer Deckel**.
+- Viktilabs ist **farbsatt** (Gradient-Farbwelt je Produkt, „+viktilabs"-Logo in Pfirsich, zweizoniges Label, **Goldlinie**, Siegel, großes „V"-Wasserzeichen, Boden-Linie) — **nicht** minimalistisch-weiß. Immer mit echten Referenzbildern (von viktilabs.de, `_1500x.webp`) arbeiten.
+- **Modell:** zuerst **Nano Banana** testen (`scripts/gen_gemini.py`, `gemini-2.5-flash-image`); braucht Gemini-Guthaben — bei 429 „credits depleted"/Free-Tier → Fallback **gpt-image-2** (`scripts/gen_openai_edit.py`, Edit mit passendem Referenzbild). Verfügbarkeit ändert sich → jedes Mal kurz prüfen.
+- Bildserie je Produkt: Front (Edit auf Referenz) · Lifestyle/Detail (Front-Bild als Referenz) · optional Duo/Bundle (beide Fronts als Referenz, dauert lang → Hintergrund).
+- Immer dazusagen: **Mockup = Konzept, keine Druckvorlage** (Umlaute im Label vermeiden, `fuer` statt `für`).
 
-### Phase 6 — RFQ + optionale Simulation
-- Versandfertiges Hersteller-Anschreiben + Spezifikations-/Grenzwertblatt
-  (`08-rfq-anfrage-<produkt>.md`), zugleich Eingabe-Template für die
-  RFQ-Automation (`04-rfq-fabrik-automation.md`: Gmail→n8n→Claude→Asana).
-- Auf Wunsch: **Komplettsimulation** aller Schritte mit konstruierten Beispielen
-  (Fabrik-Antworten, Vergleich, Bemusterung, Etikett, Launch) →
-  `09-simulation-<produkt>.md`. **Simulierte Werte immer klar als solche markieren.**
+### Produktseite — Kern
+- Aufbau wie echter Viktilabs-Shop (Hero/Buy-Box · Gut zu wissen · Inhaltsstoffe · Verzehr-Cards · Wirkung & Studien · Labor · Kombination · Mission · Vergleich · FAQ), Tonalität „Du". Module: `references/product-page-template.md`.
+- **Claim-Regel:** Vermarktung über **Aufklärung** (Kongress/Mail), nicht über Produkt-Claims. Nur **zugelassene** Angaben (praktisch v. a. **Magnesium**); pflanzliche Bestandteile → Standard-Disclaimer „dürfen aus rechtlichen Gründen keine Wirkangaben machen" + Verweis Kongress/Studien. Keine Heilversprechen (HWG/HCVO).
+- Als **Artifact** rendern: HTML mit eigenem `<style>`, System-Sans, Bild als `data:`-URI.
 
-### Phase 7 — Visualisierung
-- Präsentationsreifes, selbst-enthaltenes Artifact (HTML) für Geschäftsführung/
-  Abteilung: Pipeline-Cockpit (Status) und/oder visuelle Begehung der Simulation.
-  Lade vorab die Skill `artifact-design`. Halte die Projekt-Designidentität bei
-  (warmes Grün/Kurkuma, Serif-Display, Mono für Daten) für Konsistenz.
+### ⚠️ KRITISCHER Gotcha (Design-Stufe)
+HTML/Text **nie** per PowerShell `Get-/Set-Content` injizieren — zerstört UTF-8-Umlaute („UnvertrÃ¤glichkeiten") + setzt BOM. Bild-data-URI **immer** mit `scripts/inject_image.py` (Python, UTF-8-sicher) einsetzen. Reparatur korrumpierter Dateien: `scripts/fix_mojibake.py` (außer Emoji-Stellen → neu schreiben). Bild verkleinern per PowerShell System.Drawing (Binär) ist OK.
 
----
-
-## Verbindliche Leitplanken (gelten in jeder Phase)
-
-1. **Regulatorik ist das wichtigste Frühgate.** Standardisierte Extrakte vorab
-   auf Novel Food prüfen. **Ashwagandha** steht unter EU-Verbotsrisiko
-   (Art.-8-Verfahren, DK-Verbot, BfR 039/2024) → nicht als neue Säule aufbauen.
-2. **Keine Heilversprechen.** Für Botanicals gibt es faktisch keine erlaubten
-   Health Claims (EuGH C-386/23) → Positionierung über Tradition/Qualität;
-   Claim-Träger sind nur Vitamine/Mineralstoffe mit zugelassenen Claims.
-3. **Schwermetall-CoA je Charge** ist K.-o.-Kriterium (Ayurveda-Rohware ist
-   dokumentiert hoch belastet; VO (EU) 2023/915).
-4. **Ehrlichkeit:** Recherche mit Quellen belegen; simulierte/konstruierte Daten
-   immer eindeutig kennzeichnen; Marktzahlen als Richtwerte ausweisen.
-5. **Auf dem vorhandenen Stack aufsetzen:** Asana = Single Source of Truth,
-   Google Drive = Storage, n8n = Orchestrator, Claude API = Engine.
-6. **Format-Logik:** Kapsel = Margen-/Skalen-Rückgrat; Pulver/Churna =
-   Differenzierung bei niedrigem MOQ; Tee = Bundle/Einstieg; Softgels meiden
-   (MOQ-Killer); Öl/Tinktur nur selektiv.
-
-## Output & Abschluss
-- Alle Deliverables als nummerierte Markdown-Dokumente in einem Projektordner
-  ablegen (Schema wie `supplement-sourcing-zero-to-hero/`), README als Index.
-- Änderungen committen und auf den Arbeits-Branch pushen; bei neuem Branch
-  Draft-PR anlegen.
-- Am Ende: knappe Zusammenfassung der Entscheidungen + Artifact-Links + nächste
-  Schritte. Keine internen Modell-/Tool-Details in Repo-Artefakten.
+## Scripts (gebündelt)
+- `scripts/gen_gemini.py <out> <prompt> [refs...]` — Nano Banana (mit Referenzbildern).
+- `scripts/gen_openai_edit.py <out> <prompt> <size> <refs...>` — gpt-image-2 Edit (Style-Transfer, markentreu).
+- `scripts/gen_openai.py <out> <prompt> [size]` — gpt-image-2 Generierung ohne Referenz (Lifestyle).
+- `scripts/inject_image.py <html> <datauri.txt> [token]` — UTF-8-sichere data-URI-Injektion.
+- `scripts/fix_mojibake.py <html...>` — repariert PowerShell-Mojibake/BOM.
