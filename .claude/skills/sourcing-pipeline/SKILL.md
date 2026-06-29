@@ -37,7 +37,7 @@ Doc dort ablegen (gleicher Stil) und committen/pushen, Design-Assets nach `desig
   export OPENAI_API_KEY="$(tr -d ' \r\n' < "$SECRETS/OPENAI-API KEY.txt")"
   export GEMINI_API_KEY="$(tr -d ' \r\n' < "$SECRETS/GEMINI-API KEY.txt")"
   ```
-  Keys **nie** in Chat/Repo. (Auf dem ursprünglichen Laptop lag der Ordner unter `…\OneDrive\Dokumente\Claude\secrets\` — das ist maschinenspezifisch, nicht verlassen.)
+  Keys **nie** in Chat/Repo. (Beispiel-Ort: `C:\Users\<user>\.secrets\` — bewusst außerhalb von OneDrive/Cloud-Sync; maschinenspezifisch, nicht fest verdrahten.)
 - **Python 3** muss installiert sein (Skripte = reine stdlib, kein pip). Interpreter-Pfad je Rechner ermitteln; ggf. ist der PATH-`python` unter Windows nur ein Store-Platzhalter → vollen Pfad zur echten `python.exe` nutzen.
 - **Repo** je Rechner an beliebigem Ort klonen; Pfadangaben in den Docs sind relativ zum Repo-Ordner zu lesen.
 
