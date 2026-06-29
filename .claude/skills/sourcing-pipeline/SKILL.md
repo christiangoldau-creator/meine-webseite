@@ -28,10 +28,18 @@ Vor inhaltlicher Arbeit das relevante Doc lesen — Übersicht & Mapping:
 [`references/pipeline-overview.md`](references/pipeline-overview.md). Neue Analysen/Outputs als nummeriertes
 Doc dort ablegen (gleicher Stil) und committen/pushen, Design-Assets nach `design/`.
 
-## Setup (pro Lauf prüfen)
+## Setup (maschinenspezifisch — pro Rechner einmal einrichten, pro Bash-Lauf laden)
 
-- **API-Keys** in `C:\Users\state\OneDrive\Dokumente\Claude\secrets\` (Vimeo, OpenAI, Gemini). Pro Bash-Lauf laden (Shell-State persistiert nicht), z. B. `export VIMEO_ACCESS_TOKEN="$(tr -d ' \r\n' < "<secrets>/vimeo key.txt")"`. Token/Keys **nie** in Chat/Repo.
-- **Python**: echter Interpreter `C:\Users\state\AppData\Local\Programs\Python\Python312\python.exe` (PATH-`python` ist nur Store-Platzhalter). Skripte sind reine stdlib.
+- **API-Keys** (Vimeo, OpenAI, Gemini) liegen in einem **lokalen Secrets-Ordner** — nicht im Repo, nicht in Git, nicht synchronisiert. Drei Dateien: `vimeo key.txt`, `OPENAI-API KEY.txt`, `GEMINI-API KEY.txt`. Auf einem neuen Rechner manuell hinterlegen. Pfad je Rechner setzen und pro Lauf laden (Shell-State persistiert nicht):
+  ```bash
+  SECRETS="<dein-lokaler-secrets-ordner>"
+  export VIMEO_ACCESS_TOKEN="$(tr -d ' \r\n' < "$SECRETS/vimeo key.txt")"
+  export OPENAI_API_KEY="$(tr -d ' \r\n' < "$SECRETS/OPENAI-API KEY.txt")"
+  export GEMINI_API_KEY="$(tr -d ' \r\n' < "$SECRETS/GEMINI-API KEY.txt")"
+  ```
+  Keys **nie** in Chat/Repo. (Auf dem ursprünglichen Laptop lag der Ordner unter `…\OneDrive\Dokumente\Claude\secrets\` — das ist maschinenspezifisch, nicht verlassen.)
+- **Python 3** muss installiert sein (Skripte = reine stdlib, kein pip). Interpreter-Pfad je Rechner ermitteln; ggf. ist der PATH-`python` unter Windows nur ein Store-Platzhalter → vollen Pfad zur echten `python.exe` nutzen.
+- **Repo** je Rechner an beliebigem Ort klonen; Pfadangaben in den Docs sind relativ zum Repo-Ordner zu lesen.
 
 ## Die Pipeline in einem Satz
 
